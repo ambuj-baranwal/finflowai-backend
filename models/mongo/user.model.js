@@ -14,6 +14,13 @@ const UserSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
   },
+  password: {
+    type: String,
+    required: function() {
+      return this.auth_provider === 'email';
+    },
+    select: false, // Don't include password in queries by default
+  },
   auth_provider: {
     type: String,
     required: true,
