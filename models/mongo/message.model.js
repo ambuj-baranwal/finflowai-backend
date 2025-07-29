@@ -19,7 +19,7 @@ const messageSchema = new mongoose.Schema({
     },
     documentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'DOcument',
+        ref: 'Document',
         default: null,
     },
     canvasNodeId: {
@@ -33,4 +33,5 @@ const messageSchema = new mongoose.Schema({
 }})
 
 
-export default Message = mongoose.model("Message", messageSchema)
+const Message = mongoose.model("Message", messageSchema);
+export default Message;

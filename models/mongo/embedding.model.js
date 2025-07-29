@@ -24,4 +24,5 @@ const embeddingSchema = new mongoose.Schema({
     updatedAt: "updatedAt"
 }})
 
-export default Embedding = mongoose.model("Embedding", embeddingSchema)
+const Embedding = mongoose.model("Embedding", embeddingSchema);
+export default Embedding;

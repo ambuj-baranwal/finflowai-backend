@@ -27,7 +27,7 @@ const canvasNodeSchema = new mongoose.Schema({
     },
     linkedDocumentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "DOcument",
+        ref: "Document",
         default: null,
     },
     
@@ -36,4 +36,5 @@ const canvasNodeSchema = new mongoose.Schema({
     updatedAt: "updatedAt",
 }})
 
-export default CanvasNode = mongoose.model("CanvasNode", canvasNodeSchema)
+const CanvasNode = mongoose.model("CanvasNode", canvasNodeSchema);
+export default CanvasNode;
