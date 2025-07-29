@@ -19,4 +19,5 @@ const chatSessionSchema = new mongoose.Schema({
   } } 
 );
 
-export default ChatSession = mongoose.model('ChatSession', chatSessionSchema);
+const ChatSession = mongoose.model('ChatSession', chatSessionSchema);
+export default ChatSession;

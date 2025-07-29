@@ -16,4 +16,5 @@ const canvasSchema = new mongoose.Schema({
     updatedAt: "updatedAt",
 }})
 
-export default Canvas = mongoose.model("Canvas", canvasSchema)
+const Canvas = mongoose.model("Canvas", canvasSchema);
+export default Canvas;
