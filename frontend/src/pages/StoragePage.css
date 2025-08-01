@@ -1,0 +1,20 @@
+.storage-page-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.storage-main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #343541;
+  overflow-y: auto;
+}
+
+.storage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  color: white;
+}

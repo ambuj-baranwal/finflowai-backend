@@ -1,0 +1,56 @@
+.chat-input-container {
+  padding: 1rem 2rem;
+  background-color: #343541;
+}
+
+.chat-input-form {
+  display: flex;
+  align-items: center;
+  background-color: #8e44ad;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+}
+
+.chat-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+.chat-input::placeholder {
+  color: #e0e0e0;
+}
+
+.chat-input:focus {
+  outline: none;
+}
+
+.chat-input:disabled {
+  cursor: not-allowed;
+}
+
+.input-actions, .input-actions-right {
+  display: flex;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.send-btn {
+  font-size: 1.5rem;
+  transform: rotate(90deg);
+}
