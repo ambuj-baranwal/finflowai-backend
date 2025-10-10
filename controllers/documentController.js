@@ -38,7 +38,7 @@ export const getDocument = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
 
   if (!validateObjectId(documentId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid document ID'));
+    return res.status(400).json(createResponse(false, null, 'The document ID provided is invalid'));
   }
 
   const document = await Document.findOne({
@@ -47,7 +47,7 @@ export const getDocument = asyncHandler(async (req, res) => {
   });
 
   if (!document) {
-    return res.status(404).json(createResponse(false, null, 'Document not found'));
+    return res.status(404).json(createResponse(false, null, 'Document not found. It may have been deleted.'));
   }
 
   res.json(createResponse(true, { document }));
@@ -61,19 +61,19 @@ export const createDocument = asyncHandler(async (req, res) => {
 
   // Validate required fields
   if (!title || !fileType || !cloudReferenceUrl) {
-    return res.status(400).json(createResponse(false, null, 'Title, file type, and cloud reference URL are required'));
+    return res.status(400).json(createResponse(false, null, 'Please provide a title, file type, and cloud reference URL for your document'));
   }
 
   // Validate file type
   if (!validateFileType(`dummy.${fileType}`)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid file type. Supported types: pdf, docx, xlsx, txt'));
+    return res.status(400).json(createResponse(false, null, 'Unsupported file type. Supported types: pdf, docx, xlsx, txt'));
   }
 
   // Validate URL format (basic check)
   try {
     new URL(cloudReferenceUrl);
   } catch {
-    return res.status(400).json(createResponse(false, null, 'Invalid cloud reference URL'));
+    return res.status(400).json(createResponse(false, null, 'The cloud reference URL is invalid. Please provide a valid URL.'));
   }
 
   const document = await Document.create({
@@ -95,7 +95,7 @@ export const updateDocument = asyncHandler(async (req, res) => {
   const { title, parserMetadata } = req.body;
 
   if (!validateObjectId(documentId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid document ID'));
+    return res.status(400).json(createResponse(false, null, 'The document ID provided is invalid'));
   }
 
   // Build update object
@@ -116,7 +116,7 @@ export const updateDocument = asyncHandler(async (req, res) => {
   );
 
   if (!document) {
-    return res.status(404).json(createResponse(false, null, 'Document not found'));
+    return res.status(404).json(createResponse(false, null, 'Document not found. It may have been deleted.'));
   }
 
   res.json(createResponse(true, { document }));
@@ -129,7 +129,7 @@ export const deleteDocument = asyncHandler(async (req, res) => {
   const { documentId } = req.params;
 
   if (!validateObjectId(documentId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid document ID'));
+    return res.status(400).json(createResponse(false, null, 'The document ID provided is invalid'));
   }
 
   const document = await Document.findOneAndDelete({
@@ -138,7 +138,7 @@ export const deleteDocument = asyncHandler(async (req, res) => {
   });
 
   if (!document) {
-    return res.status(404).json(createResponse(false, null, 'Document not found'));
+    return res.status(404).json(createResponse(false, null, 'Document not found. It may have been deleted.'));
   }
 
   // TODO: In production, also delete from cloud storage and vector database

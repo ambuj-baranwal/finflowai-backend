@@ -32,7 +32,7 @@ export const createChatSession = asyncHandler(async (req, res) => {
   const { title } = req.body;
 
   if (!title || title.trim().length === 0) {
-    return res.status(400).json(createResponse(false, null, 'Session title is required'));
+    return res.status(400).json(createResponse(false, null, 'Please provide a title for your chat session'));
   }
 
   const session = await ChatSession.create({
@@ -50,7 +50,7 @@ export const getChatSession = asyncHandler(async (req, res) => {
   const { sessionId } = req.params;
 
   if (!validateObjectId(sessionId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid session ID'));
+    return res.status(400).json(createResponse(false, null, 'The session ID provided is invalid'));
   }
 
   const session = await ChatSession.findOne({
@@ -59,7 +59,7 @@ export const getChatSession = asyncHandler(async (req, res) => {
   });
 
   if (!session) {
-    return res.status(404).json(createResponse(false, null, 'Chat session not found'));
+    return res.status(404).json(createResponse(false, null, 'Chat session not found. It may have been deleted.'));
   }
 
   res.json(createResponse(true, { session }));
@@ -73,11 +73,11 @@ export const updateChatSession = asyncHandler(async (req, res) => {
   const { title } = req.body;
 
   if (!validateObjectId(sessionId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid session ID'));
+    return res.status(400).json(createResponse(false, null, 'The session ID provided is invalid'));
   }
 
   if (!title || title.trim().length === 0) {
-    return res.status(400).json(createResponse(false, null, 'Session title is required'));
+    return res.status(400).json(createResponse(false, null, 'Please provide a title for your chat session'));
   }
 
   const session = await ChatSession.findOneAndUpdate(
@@ -100,7 +100,7 @@ export const deleteChatSession = asyncHandler(async (req, res) => {
   const { sessionId } = req.params;
 
   if (!validateObjectId(sessionId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid session ID'));
+    return res.status(400).json(createResponse(false, null, 'The session ID provided is invalid'));
   }
 
   const session = await ChatSession.findOneAndDelete({
@@ -109,7 +109,7 @@ export const deleteChatSession = asyncHandler(async (req, res) => {
   });
 
   if (!session) {
-    return res.status(404).json(createResponse(false, null, 'Chat session not found'));
+    return res.status(404).json(createResponse(false, null, 'Chat session not found. It may have been deleted.'));
   }
 
   // Delete all messages in this session
@@ -126,7 +126,7 @@ export const getChatMessages = asyncHandler(async (req, res) => {
   const { page, limit } = parseQueryParams(req);
 
   if (!validateObjectId(sessionId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid session ID'));
+    return res.status(400).json(createResponse(false, null, 'The session ID provided is invalid'));
   }
 
   // Verify session belongs to user
@@ -136,7 +136,7 @@ export const getChatMessages = asyncHandler(async (req, res) => {
   });
 
   if (!session) {
-    return res.status(404).json(createResponse(false, null, 'Chat session not found'));
+    return res.status(404).json(createResponse(false, null, 'Chat session not found. It may have been deleted.'));
   }
 
   const total = await Message.countDocuments({ chatSessionId: sessionId });
@@ -166,7 +166,7 @@ export const addChatMessage = asyncHandler(async (req, res) => {
   const { role, content, documentId, canvasNodeId } = req.body;
 
   if (!validateObjectId(sessionId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid session ID'));
+    return res.status(400).json(createResponse(false, null, 'The session ID provided is invalid'));
   }
 
   // Validate message
@@ -182,16 +182,16 @@ export const addChatMessage = asyncHandler(async (req, res) => {
   });
 
   if (!session) {
-    return res.status(404).json(createResponse(false, null, 'Chat session not found'));
+    return res.status(404).json(createResponse(false, null, 'Chat session not found. It may have been deleted.'));
   }
 
   // Validate referenced documents/canvas nodes if provided
   if (documentId && !validateObjectId(documentId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid document ID'));
+    return res.status(400).json(createResponse(false, null, 'The document ID provided is invalid'));
   }
 
   if (canvasNodeId && !validateObjectId(canvasNodeId)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid canvas node ID'));
+    return res.status(400).json(createResponse(false, null, 'The canvas node ID provided is invalid'));
   }
 
   const message = await Message.create({

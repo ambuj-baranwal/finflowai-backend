@@ -7,13 +7,13 @@ export const errorHandler = (err, req, res, next) => {
 
   // Mongoose bad ObjectId
   if (err.name === 'CastError') {
-    const message = 'Resource not found';
+    const message = 'The requested resource could not be found';
     error = { message, statusCode: 404 };
   }
 
   // Mongoose duplicate key
   if (err.code === 11000) {
-    const message = 'Duplicate field value entered';
+    const message = 'This information already exists in the system';
     error = { message, statusCode: 400 };
   }
 
@@ -25,12 +25,12 @@ export const errorHandler = (err, req, res, next) => {
 
   // JWT errors
   if (err.name === 'JsonWebTokenError') {
-    const message = 'Invalid token';
+    const message = 'Your session is invalid. Please login again.';
     error = { message, statusCode: 401 };
   }
 
   if (err.name === 'TokenExpiredError') {
-    const message = 'Token expired';
+    const message = 'Your session has expired. Please login again.';
     error = { message, statusCode: 401 };
   }
 
@@ -42,7 +42,7 @@ export const errorHandler = (err, req, res, next) => {
 };
 
 export const notFound = (req, res, next) => {
-  const error = new Error(`Not found - ${req.originalUrl}`);
+  const error = new Error(`The requested page '${req.originalUrl}' was not found`);
   res.status(404);
   next(error);
 };
