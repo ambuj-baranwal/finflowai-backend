@@ -19,7 +19,7 @@ export const register = asyncHandler(async (req, res) => {
   // Check if user already exists
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return res.status(400).json(createResponse(false, null, 'User already exists with this email'));
+    return res.status(400).json(createResponse(false, null, 'An account with this email already exists. Please login or use a different email.'));
   }
 
   // Hash password if email auth
@@ -53,24 +53,24 @@ export const login = asyncHandler(async (req, res) => {
 
   // Validate input
   if (!email || !password) {
-    return res.status(400).json(createResponse(false, null, 'Email and password are required'));
+    return res.status(400).json(createResponse(false, null, 'Please provide both email and password to login'));
   }
 
   // Check for user
   const user = await User.findOne({ email }).select('+password');
   if (!user) {
-    return res.status(401).json(createResponse(false, null, 'Invalid credentials'));
+    return res.status(401).json(createResponse(false, null, 'Invalid email or password. Please try again.'));
   }
 
   // Check if user uses email auth
   if (user.auth_provider !== 'email') {
-    return res.status(400).json(createResponse(false, null, 'Please use your OAuth provider to login'));
+    return res.status(400).json(createResponse(false, null, `This account was created using ${user.auth_provider}. Please sign in with ${user.auth_provider} instead.`));
   }
 
   // Check password
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(401).json(createResponse(false, null, 'Invalid credentials'));
+    return res.status(401).json(createResponse(false, null, 'Invalid email or password. Please try again.'));
   }
 
   // Generate tokens
@@ -89,7 +89,7 @@ export const getMe = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
   
   if (!user) {
-    return res.status(404).json(createResponse(false, null, 'User not found'));
+    return res.status(404).json(createResponse(false, null, 'Your account could not be found. Please login again.'));
   }
 
   res.json(createResponse(true, { user: removePasswordFromUser(user) }));
@@ -112,7 +112,7 @@ export const oauthCallback = asyncHandler(async (req, res) => {
 
   // Validate OAuth data
   if (!name || !email || !['google', 'github'].includes(auth_provider)) {
-    return res.status(400).json(createResponse(false, null, 'Invalid OAuth data'));
+    return res.status(400).json(createResponse(false, null, 'Authentication failed. Please try signing in again.'));
   }
 
   // Find or create user
@@ -125,7 +125,7 @@ export const oauthCallback = asyncHandler(async (req, res) => {
       auth_provider
     });
   } else if (user.auth_provider !== auth_provider) {
-    return res.status(400).json(createResponse(false, null, 'Email already registered with different provider'));
+    return res.status(400).json(createResponse(false, null, `This email is already registered using ${user.auth_provider}. Please sign in with ${user.auth_provider} instead.`));
   }
 
   // Generate tokens
